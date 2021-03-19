@@ -1,0 +1,773 @@
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+:root {
+    --nm: 6px 6px 16px 0 rgba(0, 0, 0, 0.2),
+    -6px -6px 16px 0 rgba(255, 255, 255, 1);
+
+    --nm-inset:inset 4px 4px 8px 0 rgba(0, 0, 0, 0.2),
+    inset -4px -4px 8px 0 rgba(255, 255, 255, 0.8);
+}
+
+
+
+  
+  
+body{
+
+    background: #ffff;
+    /*background-image: linear-gradient(120deg,#f6d365, #d88771);*/
+    color: #000000;
+
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+
+
+
+
+
+}
+
+
+
+
+
+header{
+    font-size: 1.5rem;
+}
+
+
+#blurb{
+    text-align:center;
+    font-size:14px;
+}
+
+header, form{
+    min-height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+
+h1{
+    text-align: center;
+    margin-top: 50px;
+    font-size: 35px;
+
+}
+
+form input {
+    padding: 0.5rem;
+    font-size: 2rem;
+    border: none;
+    width: 50vh;
+    background-color: var(--bg-color);
+    box-shadow: var(--nm);
+  transition: box-shadow 0.3s ease-in-out;
+
+}
+
+form button{
+    padding: 1.25rem;
+    background-color: var(--bg-color);
+    box-shadow: var(--nm);
+    border: none;
+
+
+    color:#ffeb3b;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+}
+
+
+
+form button:hover{
+   background:#d88771;
+   color: white;
+}
+
+
+
+.btnDiv{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.homeBtn{
+
+
+    margin-top: 50px;
+    padding: 1.25rem;
+    
+    border: none;
+
+     display: flex;
+     justify-content: center;
+     align-items: center;
+
+    color:#d88771;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+
+
+.todo-container,
+.urgentList {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+
+.mustDo{
+
+    padding: 1.25rem;
+    margin-right: 16px;
+    background: #EBEE4B;
+    border: none;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.urgentList{
+    margin-top:50px;
+    
+} 
+
+
+
+.displayNone{
+    display:none;
+}
+
+
+.priorityBtnFreeze{
+    pointer-events: none;
+}
+
+.todo-list,
+.urgTodoList{
+    min-width: 30%;
+    list-style: none;
+}
+
+
+.todo{
+    margin: 0.5rem;
+    color: black;
+    background-color: var(--bg-color);
+    box-shadow: var(--nm);
+
+    font-size: 1.5rem;
+    display: flex;
+
+    justify-content:space-between;
+    align-items: center;
+
+    transition:all 0.5s ease; /*helps transition the opacity of the list item when check btn is clicked*/
+
+
+}
+
+.todo li{
+    flex: 1;
+    font-size: 15px;
+}
+
+
+.trash-btn,
+.complete-btn,
+.urgent-btn{
+    color: black;
+    /*background-color: var(--bg-color); */
+    background: #fcf4f4;
+    /*box-shadow: var(--nm);*/
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+
+}
+
+
+.urgent-btn{
+    color: black;
+    /*background-color: var(--bg-color); */
+   /* box-shadow: var(--nm);*/
+
+    background: #C4C4C4;
+    border: none;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1rem;
+
+}
+
+
+.fall{
+    transform: translateY(8rem) rotateZ(20deg);
+    opacity: 0;
+}
+
+
+.complete-btn{
+    color: black;
+    /*background-color: var(--bg-color);
+    box-shadow: var(--nm);*/
+
+    background:#EBEE4B;
+
+}
+
+
+
+
+
+.todo-item{
+    padding: 0rem 0.5rem;
+}
+
+
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline:none;
+    border:none;   
+}
+
+
+
+.select {
+
+    margin: 1rem;
+    position: relative;
+
+    overflow: hidden;
+}
+
+
+
+select{
+    color:  #000000;
+  
+    width: 10rem;
+    cursor: pointer;
+    padding: 1rem;
+
+}
+
+
+.select::after{
+    content: "\25BC";
+    position: absolute;
+    background: #191818;
+    color: white;
+    top:0;
+    right:0;
+    padding: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+
+}
+
+
+.select:hover::after{
+
+    background: white;
+    color: #ff6f47;
+}
+.fa-trash, .fa-check, .fa-clock {
+    pointer-events: none; /*this means u cant click on the icons on the btns, just the btns themselves (this helps us with deleteCheck() func in our js)*/
+     color: black;
+}
+
+
+
+.completed{
+
+    text-decoration: line-through;
+    opacity: 0.5;
+    color: #EBEE4B;
+}
+
+
+
+.urgent{
+
+    background: rgba(253, 65, 8, 0.932);
+    color: white;
+}
+
+
+
+.invisible{
+    display:none;
+} 
+
+.visible{
+    display:flex;
+}
+
+
+.blueUncomp{
+    background: blue;
+}
+
+.redComp{
+display: none;;
+}
+
+
+
+.completedContainer{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+
+    padding-top: 50px;
+}
+
+#completedListTitle{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+
+
+    padding-top: 100px;
+    font-weight: bold;
+
+
+}
+
+
+#completedListRefreshNote{
+    display:flex;
+    align-items:center;
+    justify-content: center;
+
+
+    padding-top: 10px;
+    font-size:14px;
+}
+
+.completedList{
+
+    
+    align-items:center;
+    justify-content: center;
+    padding-top: 20px;
+
+    list-style:none;
+    text-decoration: line-through;
+    opacity: 0.5;
+    color: #EBEE4B;
+
+}
+
+
+
+.makeCompleteInvisible{
+    transform: translateY(8rem) rotateZ(20deg);
+    opacity: 0;
+
+}
+
+#divForShowingNumOfTasks{
+    text-align:center;
+}
+
+#divForShowingNumOfTasksComp{
+    text-align:center;
+}
+
+
+
+#numOfPriorityTasksP{
+    text-align:center;
+    margin-top: 50px;
+}
+
+
+
+
+
+
+
+.modal{
+    position: fixed;
+    top: 50%;
+    left:50%;
+    /*display: flex;
+     justify-content: center;
+     align-items: center;*/
+     transform:translate(-50%, -50%);
+     background-color: rgb(118 180 165);
+     
+     z-index:10;
+     width: 500px;
+     max-width: 80%;
+     /*padding: 10px;*/
+
+     display: none;
+
+
+}
+
+
+
+
+
+  
+  
+ 
+
+
+
+  .modal-header0{
+    padding: 10px 15px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    /*border-bottom: 1px solid black;*/
+    background:rgb(250, 250, 250);
+  
+    margin-bottom: -33px;
+    border:0px;
+  }
+
+  .modal-header{
+    padding: 10px 15px;
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    /*border-bottom: 1px solid black;*/
+    background:rgb(250, 250, 250);
+     border:0px;
+    position: relative;
+    margin-top: -1px;
+  }
+
+
+  .modal-header::after{
+    position:absolute;
+    width:20px;
+    height:20px;
+    border-top: 0px solid #ffff;
+    border-left: 0px solid #ffff;
+    top: 100%;
+    left:50%;
+    margin-left: -9px;
+    content: '';
+    transform:rotate(45deg);
+    margin-top: -10px;
+
+    background:rgb(250, 250, 250);
+
+} 
+
+  
+
+  .modal-header2{
+    
+    color: #053328;
+    font-weight: bold;
+    text-align:center;
+    background: rgb(250, 250, 250);
+    margin-top: -25px;
+  }
+  
+  .modal-header2::after{
+      position:relative;
+      width:20px;
+      height:20px;
+      border-top: 0px solid #ffff;
+      border-left: 0px solid #ffff;
+      top: 100%;
+      left:50%;
+      margin-left: -25px;
+      content: '';
+      transform:rotate(45deg);
+      margin-top: -10px;
+  
+      background:rgb(250, 250, 250);
+  
+  }
+#modalBody{
+    margin-top: 50px;
+    
+    display: flex;
+    justify-content: center;
+     align-items: center;
+     
+
+}
+
+
+.modal-header .title{
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+#overlay{
+    position: fixed;
+    opacity: 0;
+    top:0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background: rgba(0,0,0, 50%);
+
+    pointer-events: none;
+}
+
+#overlay.active{
+   pointer-events: all;
+    opacity: 1;
+}
+
+
+
+#iconDiv{
+    justify-content: center;
+    align-items: center;
+    display: felx;
+    display: flex;
+    margin-top: 25px;
+}
+
+.fa-check-circle{
+   font-size: 3em;
+   color: #76b4a5;
+}
+
+
+
+#modalMsg1{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+
+    font-size:1em;
+    font-weight:bold;
+    color: black;
+}
+
+
+#modalMsg{
+    display:flex;
+    justify-content: center;
+    align-items:center;
+
+    font-size:1em;
+    color: black;
+    font-weight:lighter;
+}
+
+#setGoal{
+    text-align:center;
+}
+
+
+
+
+
+/*-----------How to do mobile responsive media query--NOTE:
+
+Don't forget to have all ur normal  css declarations ABOVE not BELOW the media query or the query won't work either!!!.----*/
+
+
+/* ----------- Galaxy S3 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+and (device-width: 360px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 2) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        /*background-color: var(--bg-color);*/
+        background-color:aqua;
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+}
+
+
+
+
+/* Portrait */
+@media screen 
+and (device-width: 320px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 2) 
+and (orientation: portrait) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        /*background-color: var(--bg-color);*/
+        background-color:aqua;
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+}
+
+/*This one works well for android 360px width*/
+@media only screen and (max-width: 360px) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        background-color: var(--bg-color);
+        
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+
+} 
+
+
+/*This one works well for non-android 375px width*/
+@media only screen and (max-width: 375px) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        background-color: var(--bg-color);
+        
+        
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+   .select{
+    width: 13vh;
+   }
+}
+
+/* Landscape */
+@media screen 
+and (device-width: 320px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 2) 
+and (orientation: landscape) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        /*background-color: var(--bg-color);*/
+        background-color:aqua;
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+}
+
+/* ----------- Galaxy S4, S5 and Note 3 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+and (device-width: 320px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 3) {
+    
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 32vh;
+        margin-left: 15px;
+        /*background-color: var(--bg-color);*/
+        background-color:aqua;
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+    }
+
+
+    @media only screen and (min-width: 768px) {
+        form input {
+            padding: 0.5rem;
+            font-size: 2rem;
+            border: none;
+            width: 50vh;
+            margin-left: 15px;
+            background-color: var(--bg-color);
+            
+            box-shadow: var(--nm);
+            transition: box-shadow 0.3s ease-in-out;
+        }
+    }
+
+/* Portrait */
+@media screen 
+and (device-width: 320px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 3) 
+and (orientation: portrait) {
+
+}
+
+/* Landscape */
+@media screen 
+and (device-width: 320px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 3) 
+and (orientation: landscape) {
+
+}
+
+/* ----------- Galaxy S6 ----------- */
+
+/* Portrait and Landscape */
+@media screen 
+and (device-width: 360px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 4) {
+
+}
+
+/* Portrait */
+@media screen 
+and (device-width: 360px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 4) 
+and (orientation: portrait) {
+
+}
+
+/* Landscape */
+@media screen 
+and (device-width: 360px) 
+and (device-height: 640px) 
+and (-webkit-device-pixel-ratio: 4) 
+and (orientation: landscape) {
+}

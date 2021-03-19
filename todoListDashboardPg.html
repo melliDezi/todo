@@ -1,0 +1,102 @@
+<html>
+
+<head>
+    <meta charset='UTF-8'/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#ff6f47" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+        
+        <link rel='stylesheet' href='todoListDashboardPg.css'>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <title>To DO List from Developer ED-Priority Tasks Pg</title>
+</head>
+    <body> 
+
+
+        <div class='circleDiv'></div>
+        <div class='greetingDiv'>
+            <h1>Hello Maryam!</h1>
+            <p class='greetingP'>These are your to-do stats:</p>
+        </div>
+
+    <div id='containerStatsDiv'>
+     <div id='allStatsDiv'>
+        <div class='urgentStats'><div class='circleDivSmall'></div><span id='urgentStatSpan'>9 </span><div>urgent tasks</div></div>
+        <div class='nonUrgentStats'><div class='circleDivSmall'></div><span id='nonUrgentStatSpan'>7 </span><div>non-urgent tasks</div></div>
+        <div class='completedStats'><div class='circleDivSmall'></div><span id='completedStatSpan'>5 </span><div>completed tasks</div></div>
+    </div> 
+</div>
+
+
+<div id='divForCircleBottom'>
+    <div class='circleDivBottom'></div>
+
+</div>
+
+<div id='goalMsgDiv'>
+    <div id='goalMsg'>Your Most Important Goal Currently:</div>
+</div>
+
+<div id='goalDiv'>
+    <div id='goal'>Finish wireframes before meeting</div>
+</div>
+
+<div id='changeGoalBtnDiv'>
+    <button id='changeGoalBtn'>Change goal</button>
+</div>
+
+
+<div id='bottomDiv'>
+    <div id='bottomDivInnerDiv'></div>
+</div>
+
+
+
+        <script>
+            
+            //Variables:
+           const urgentStatSpan=document.getElementById('urgentStatSpan');
+           const nonUrgentStatSpan=document.getElementById('nonUrgentStatSpan');
+           const completedStatSpan=document.getElementById('completedStatSpan');
+
+
+
+
+           //Event Listeners:
+
+            document.addEventListener('DOMContentLoaded', getToDoStats);
+
+
+            function getToDoStats(){
+              
+               //to display urgent tasks on dashboard stats pg:
+                let urgentTasksNum=JSON.parse(localStorage.getItem('urg')).length;
+
+               urgentStatSpan.innerHTML=urgentTasksNum;
+
+               console.log(urgentTasksNum+ ' helllllllloooo');
+
+
+
+                //to display non-urgent tasks on dashboard stats pg:
+                let nonUrgentTasksNum=JSON.parse(localStorage.getItem('todos')).length;
+
+                nonUrgentStatSpan.innerHTML=nonUrgentTasksNum;
+
+
+
+                //to display completed tasks on dashboard stats pg:
+
+                let completedTasksNum=JSON.parse(localStorage.getItem('completed')).length;
+
+                completedStatSpan.innerHTML=completedTasksNum;
+
+
+
+            }
+        </script>
+    </body>
+
+    </html>

@@ -1,0 +1,221 @@
+
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+
+
+
+body{
+
+    font-family: 'Poppins',sans-serif;
+}
+
+
+.circleDiv{
+    background: #EBEE4B;
+    width: 20vh;
+    height: 20vh;
+    border-radius: 50%;
+    margin-top: 45px;
+    margin-left: 15px;
+}
+
+.greetingDiv{
+   /* text-align:center;*/
+   margin-top: -95px;
+    /* margin-right: 90px; */
+    text-align: left;
+    margin-left: 67px;
+}
+
+h1{
+    font-size:19px;
+    text-align: left;
+}
+
+
+.greetingP{
+    margin-top: -12px;
+    color: #9B8A8A;
+}
+
+
+
+#containerStatsDiv{
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#allStatsDiv{
+    
+
+    margin-top: 65px;
+}
+
+
+
+.urgentStats{
+
+    background:#FFFFFF;
+    filter:drop-shadow(28px 28px 50px rgb(13 39 80 / 15%)) drop-shadow(-23px -23px 45px #ffffff);
+
+    width:50vh;
+    height:15vh;
+
+
+    margin-bottom: 38px;
+
+    padding-top: 29px;
+    padding-left: 12px;
+}
+
+
+.nonUrgentStats{
+
+    background:#FFFFFF;
+    filter:drop-shadow(28px 28px 50px rgb(13 39 80 / 15%)) drop-shadow(-23px -23px 45px #ffffff);
+
+    width:50vh;
+    height:15vh;
+
+    margin-bottom: 38px;
+
+    padding-top: 29px;
+    padding-left: 12px;
+
+}
+
+.completedStats{
+
+    background:#FFFFFF;
+    filter:drop-shadow(28px 28px 50px rgb(13 39 80 / 15%)) drop-shadow(-23px -23px 45px #ffffff);
+
+    width:50vh;
+    height:15vh;
+
+
+    margin-bottom: 38px;
+
+    padding-top: 29px;
+    padding-left: 12px;
+
+}
+
+
+#urgentStatSpan{
+    font-weight: bold;
+
+    margin-top: 5px;
+}
+
+
+
+.circleDivSmall{
+
+    background: #EBEE4B;
+    width: 3vh;
+    height: 3vh;
+    border-radius: 50%;
+    margin-top: -17px;
+    margin-left: -4px;
+
+
+    margin-bottom: -13px;/*if we want circle & numbers to overlap slightly*/
+}
+
+span{
+    color:rgb(3, 19, 3);
+    font-weight: bold;
+}
+
+
+
+#divForCircleBottom{
+    display:flex; 
+    
+    justify-content: center;
+    align-items: center;
+}
+
+.circleDivBottom{
+
+
+    background: #EBEE4B;
+    width: 9vh;
+    height: 9vh;
+    border-radius: 50%;
+    
+   
+}
+
+
+#goalMsgDiv{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#goalMsg{
+    font-weight: bold;
+
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+
+#goalDiv{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#goal{
+    color: #9B8A8A;
+}
+
+
+#changeGoalBtnDiv{
+    display:flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+#changeGoalBtn{
+    background: #EBEE4B;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 0.5rem 0.5rem;
+    font-size: 0.9rem;
+    font-weight: bold;
+
+    font-family:'Poppins',sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: background 250ms ease-in-out, transform 150ms ease;
+    -webkit-appearance: none;
+
+    margin-top: 25px;
+}
+
+
+#changeGoalBtn:hover,
+#changeGoalBtn:focus {
+    background: #0053ba;
+}
+
+#changeGoalBtn:focus {
+    outline: 1px solid #fff;
+    outline-offset: -4px;
+}
+
+#changeGoalBtn:active {
+    transform: scale(0.99);
+}

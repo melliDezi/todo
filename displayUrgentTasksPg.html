@@ -1,0 +1,295 @@
+<html>
+
+<head>
+    <meta charset='UTF-8'/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="theme-color" content="#ff6f47" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+        <link rel='stylesheet' href='yetAnotherToDoListDvEd.css'>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <title>To DO List from Developer ED-Priority Tasks Pg</title>
+</head>
+    <body> 
+
+        <div>
+            <h1>Your Priority Tasks:</h1>
+        </div>
+        
+       <div class='btnDiv'>
+        <button class='homeBtn' onclick="location.href = 'yetAnotherToDoListDvEdMyVersion.html';">HOME</button>
+       </div>
+        
+        <div class='urgentList' id='urgentList'>
+            <ul class='urgTodoList'></ul>
+         
+        </div>
+        <p id='numOfPriorityTasksP'>You have <span id='numOfPriorityTasks'></span> priority tasks </p>  
+
+
+        <script>
+              const urgList=document.querySelector('.urgTodoList');
+              const numOfPriorityTasks= document.getElementById('numOfPriorityTasks');
+
+              var container_div = document.getElementById('urgentList');
+       var count = container_div.getElementsByTagName('div').length;
+
+           
+
+
+        //Event Listeners:
+              document.addEventListener('DOMContentLoaded', getUrgTodos);
+              urgList.addEventListener('click', deleteTodo);
+
+
+
+
+              function getUrgTodos(){
+
+
+                let urgentLocArray;
+
+               if(!localStorage.getItem('urg')){
+                     urgentLocArray=[];
+                      }else{
+                    urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                 }
+
+
+
+         urgentLocArray.forEach(function(item){
+       //Create a div called todoDiv
+             const todoDiv= document.createElement('div');
+      
+      //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+      todoDiv.classList.add('todo');
+
+
+      //create  a list (li), give the li an innerText
+       const newTodo=document.createElement('li');
+        //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+       newTodo.innerText=item;
+        
+       //add a class of 'todo-item' to the li
+       newTodo.classList.add('todo-item');
+
+
+
+       //append the li to the new div we created:
+
+       todoDiv.appendChild(newTodo);
+
+      // todoInput.value='';
+
+
+       
+       //make urgent clock button and append it to the div:----------Don't really need this cuz we can't urgent an already urgent task & we don't to be able tp un-urgent it
+
+         //const urgentButton= document.createElement('button');
+         //urgentButton.innerHTML='<i class="far fa-clock"></i>';
+         //urgentButton.classList.add('urgent-btn');
+         //todoDiv.appendChild(urgentButton); 
+
+
+
+       //Create Completed Button:
+
+       const completedButton=document.createElement('button');
+
+       completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+       completedButton.classList.add('complete-btn');
+
+       todoDiv.appendChild(completedButton);
+
+
+
+       //Create a trash button:
+       const trashButton=document.createElement('button');
+
+       trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+       trashButton.classList.add('trash-btn');
+
+       todoDiv.appendChild(trashButton);
+
+
+       //attach new todo div with its list item and completed and trash btns to the todoList(ul);
+
+
+       
+       urgList.appendChild(todoDiv);
+
+
+      var container_div = document.getElementById('urgentList');
+       var count = container_div.getElementsByTagName('div').length;
+
+       console.log(count);
+
+
+       numOfPriorityTasks.innerHTML =count;
+      
+      })
+
+
+
+
+      var container_div = document.getElementById('urgentList');
+      var count = container_div.getElementsByTagName('div').length;
+
+       console.log(count);
+
+
+       numOfPriorityTasks.innerHTML =count +'woohooo';
+              }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function deleteTodo(e){
+
+console.log(e.target); 
+
+const item=e.target;//basically this is whatever we are clicking on(the li, trash btn, check btn etc)
+
+if(item.classList[0]==='trash-btn'){
+    console.log('yup we clicked trash btn!');
+
+    const todo=item.parentElement;
+    //console.log(todo +' this is the parent element');
+
+    removeLocalTodos(todo);
+
+    //below we're adding a class of 'fall' to our parent element the todo div, if it doesn't aleady have the fall class. if it does already have it, this will remove it, if not it will add it-it's toggling:
+    //in our css, we give the fall class a transition effect that makes the div item we're clicking trash btn on, fall down and become invisible
+    todo.classList.add('fall');
+   
+
+    //Although the above step makes the div invisible, we still need to remove it, 
+    //but only after the transition effect(the falling down effect for deleted items), so here, we add an event listener called 'transtionend',
+    // which will run the callback func we defined, only AFTER our transition has occurred, this is a special js eventlistener that js has jsut for transitions
+    todo.addEventListener("transitionend", function(){
+        todo.remove();
+    })
+  
+} 
+
+//This says, if our list item has as its first class, the class 'complete-btn'
+//assign the list item's parentElement(in this case the div that encases the list item, its btns etc) to a const called todo; 
+//then, sya, toggle a class on tho that parent element div, so if the div has no class pf 'completed', then add it
+//if it does already have a  class of 'completed', then remove that class from it
+//this allows us to add a class of completed, when we click the  check btn, and so add a line through the list item and reduce its opacity
+//then, if we change our mind that this item is not completed yet and we click on the check btn again, it will remove the 'completed' class from the div and all styling that goes with it
+
+if(item.classList[0]==='complete-btn'){
+    console.log('yup we clicked complete btn!'); 
+
+    const todo=item.parentElement;
+    todo.classList.toggle('completed');
+}
+
+
+
+}
+
+
+
+
+
+function removeLocalTodos(todo) { //takes in the div that contains the li, the btns etc
+  let todos;  //here, we declare a var called todos;
+  if (localStorage.getItem("urg") === null) { //then we say if localStorage.getItem('urg') does not exist, set the variable todos to an empty array
+    todos = [];
+  } else {
+    todos = JSON.parse(localStorage.getItem("urg"));//else, if localStorage.getItem('urg') DOES exist, we set the todos variable to a parsed version of localStorage.getItem('urg')---which willl be an array 
+
+  }
+  const todoIndex = todo.children[0].innerText;//Here, we're getting the 1st child of the div and then getting the innerText of that 1st child and assigning it to a variable called todoIndex
+  todos.splice(todos.indexOf(todoIndex), 1);// so here we;re saying take the todos array that contains our urg items & splice(remove) from it the item that ......finish writing this explanation
+  localStorage.setItem("urg", JSON.stringify(todos));//set the localStorage again to a JSON.stringifid version of the todos array
+
+  console.log(localStorage.getItem('urg'));
+
+
+
+
+  let todosMain;
+
+  if(localStorage.getItem('todos')===null){
+
+    todosMain=[];
+  } else{
+    todosMain=JSON.parse(localStorage.getItem('todos'));
+  }
+
+
+
+  const todoIndexMain= todo.children[0].innerText;
+
+  todosMain.splice(todosMain.indexOf(todoIndexMain), 1);
+
+  localStorage.setItem('todos', JSON.stringify(todosMain));
+
+  console.log(localStorage.getItem('todos'));
+
+
+
+
+
+  
+  var container_div = document.getElementById('urgentList');
+       var count = container_div.getElementsByTagName('div').length;
+
+       console.log(count);
+
+       console.log(container_div.getElementsByTagName('div'));
+
+       console.log(container_div.getElementsByTagName('div').length);
+
+
+       numOfPriorityTasks.innerHTML =count-1 + ' & I subtracted one';
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//check OUT: cache.googleusercontent.com/search?q=cache:CoMFJbf_BvAJ:https://stackoverflow.com/questions/23020196/making-a-function-affect-a-element-in-another-page+&cd=1&hl=en&ct=clnk&gl=et
+
+
+
+
+
+        </script>
+    </body>
+</html>
+
+
+
+
+
+
+
+

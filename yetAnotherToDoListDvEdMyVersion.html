@@ -1,0 +1,1875 @@
+<html> 
+    <head> 
+        <meta charset='UTF-8'/>
+       
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" integrity="sha512-HK5fgLBL+xu6dm/Ii3z4xhlSUyZgTT9tuc/hSrtw6uzJOvgRr2a9jyxxT1ely+B+xFAmJKVSTbpM/CuL7qxO8w==" crossorigin="anonymous" />
+        <link rel='stylesheet' href='yetAnotherToDoListDvEd.css'>
+
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+        <title>To DO List from Developer ED</title>
+    </head>
+    <body>
+      <header>
+          <h1>bigList.</h1>
+    </header> 
+    <p id='blurb'>everything you need to do, where you can see it.</p>
+    <div id="priorityBtnDiv" style="
+    text-align: center;
+    margin-top: 25px;
+"><button class="mustDo">Priority</button></div>
+    
+
+    <form>
+        
+        <input type='text' class='todo-input'/>
+
+        <button class='todo-button' type='submit'>
+            <i class='fas fa-plus-square'></i>
+        </button>
+
+         
+        
+
+        <div class='select'>
+         <select name='todos' class='filter-todo'>
+            <option value='all'>All</option>
+            <option value='completed'>Completed</option>
+            <option value='uncompleted'>Uncompleted</option>
+            <!----<option value='urgent'>Urgent</option>-----don't need this anymore--->
+          </select>
+         </div>
+    </form>
+
+    <div class='todo-container'>
+        <ul class='todo-list'></ul><!----make sure to leave no space between the ul tags, just like this, because a space can add an undefined text  node to the childnodes of the ul list, which will mess up the code when you try to run the filterTodo function later!-->
+        
+    </div>
+
+    <div id='divForShowingNumOfTasks'></div>
+
+    <p id='completedListTitle'>Completed Tasks:</p>
+    <p id='completedListRefreshNote'>(refresh page to see your latest completed tasks)</p>
+
+    <div class='completedContainer'>
+        
+     
+        <ul class='completedList'></ul>
+    </div>
+
+
+    <div id='divForShowingNumOfTasksComp'></div>
+
+
+
+    
+
+
+
+
+    <div class='urgentList'>
+        <ul class='urgTodoList'></ul>
+
+
+
+
+
+
+        <div class='modal' id='modal'>
+
+
+            <div class='modal-header0'>
+                <div class='title'></div>
+                <button id='close-btn'>&times;</button>
+            </div>
+            <div class='modal-header2'>
+
+                <div id='iconDiv'><i class="fas fa-check-circle"></i></div>
+                <div>Awesome!</div>
+                <div id='modalMsg'>Congrats, you're really on a roll now!</div>
+            </div> 
+
+            <div class='modal-header'>
+                <div class='nothinModal'>Nothing</div>
+                
+            </div>
+            
+           
+            <div id='iconDiv'><i class="fas fa-check-circle"></i></div>
+          
+            <div id='modalBody'> 
+            </div> 
+           
+        </div>
+
+
+
+
+
+
+
+    </div>
+        
+
+          
+        <div id='setGoal'>
+            <div id='goalMsg'>Set a goal for tasks completed</div>
+            <input type=range min='1' max='50' name='slider' value='25' id='slider'/>
+            <p>Reward myself after <span id="numOfGoals">25</span> tasks completed</p>
+        </div>
+
+
+        <div id='overlay'></div>
+
+
+
+        <script>
+
+
+//localStorage.clear();
+
+
+
+
+
+
+
+
+
+            //Selectors
+
+
+            
+
+            const heading= document.querySelector('h1');
+            const todoInput=document.querySelector('.todo-input');
+
+            const todoButton=document.querySelector('.todo-button');
+
+            const todoUlDiv= document.querySelector('.todo-container');
+
+            const divForShowingNumOfTasks=document.getElementById('divForShowingNumOfTasks');
+
+            const todoList=document.querySelector('.todo-list');
+
+            const urgList=document.querySelector('.urgTodoList');
+            
+            const filterOption=document.querySelector('.filter-todo');
+
+            const showUrgent=document.querySelector('.mustDo');
+
+            const completedList=document.querySelector('.completedList');
+
+            
+            const numOfTasks=document.createElement('p');
+
+            const numOfTasksComp=document.createElement('p');
+
+            const divForShowingNumOfTasksComp=document.getElementById('divForShowingNumOfTasksComp');
+
+            const modal=document.getElementById('modal');
+
+           const overlay=document.getElementById('overlay');
+
+
+           const closeBtn=document.getElementById('close-btn');
+
+
+           const sliderInput=document.getElementById('slider');
+
+            const numOfGoalSpan=document.getElementById('numOfGoals');
+
+
+
+
+            
+
+
+
+
+
+
+          
+
+
+
+            //Event Listeners
+             
+            document.addEventListener('DOMContentLoaded', getTodos);//this will call the getTodos func that loads list items from localStorage, once the HTML document has fully loaded
+            
+            todoButton.addEventListener('click', addTodo);
+
+
+            todoInput.addEventListener('keydown', function(e){
+
+              
+                const value=this.value;
+
+                console.log(value);
+
+                if(e.code === 'Enter' && value !== ''){
+                     
+                    addTodo(e);
+                } else{
+                    return false;
+                }
+                
+            }) 
+
+
+            todoList.addEventListener('click', deleteCheck);
+
+            completedList.addEventListener('click', deleteCheckCompList);
+            filterOption.addEventListener('click', filterTodo);
+        
+            showUrgent.addEventListener('click', showUrgList);
+
+
+
+            closeBtn.addEventListener('click', function(e){
+            modal.style.display='none';
+              overlay.style.background='white';
+           })
+
+
+
+
+
+           sliderInput.oninput = function() { 
+
+                  numOfGoalSpan.innerHTML = this.value;                      
+               }
+
+
+
+            //Functions
+
+
+            function addTodo(event){
+
+               
+                //Below prevents form from submitting, as button is in form:
+                event.preventDefault();
+
+                console.log('button clicked');
+
+                if(todoInput.value !== ''){
+
+                //create a div element every time we add a todo:
+                const todoDiv=document.createElement('div'); 
+
+                //add a class of 'todo' to our new div:
+                todoDiv.classList.add('todo');
+
+                //below 4 steps are creating a new li, setting its inner text, adding a class of todo=item to it and appending it to the todoDiv div:
+                const newTodo= document.createElement('li');
+
+                newTodo.innerText=todoInput.value;
+
+
+                //Do this last--save todos array to localStorage by calling saveLocalTodos and passing in our input form's value into it---Do this last:
+
+                saveLocalTodos(todoInput.value);
+
+                newTodo.classList.add('todo-item');
+                todoDiv.appendChild(newTodo);
+
+
+                //make urgent clock button and append it:
+
+                const urgentButton= document.createElement('button');
+                urgentButton.innerHTML='<i class="far fa-clock"></i>';
+                urgentButton.classList.add('urgent-btn');
+                todoDiv.appendChild(urgentButton); 
+
+
+                
+                //make check mark button and append it:
+
+                const completedButton= document.createElement('button');
+
+                completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+                completedButton.classList.add('complete-btn');
+
+                todoDiv.appendChild(completedButton);
+
+
+                //make trash button and append it: 
+               const trashButton= document.createElement('button');
+
+               trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+               trashButton.classList.add('trash-btn');
+
+               todoDiv.appendChild(trashButton);
+
+
+
+               //now append the new div with its list item and 3 buttons to the ul we have already defined in our HTML:
+
+
+               todoList.appendChild(todoDiv);
+
+
+              
+
+
+
+               //After appending list item div, clear todo input form's  value:
+                 todoInput.value='';
+
+                 console.log(todoList.getElementsByTagName('div').length);
+
+
+
+                // const numOfTasks=document.createElement('p');
+                 numOfTasks.innerText='You have a total of '+ todoList.getElementsByTagName('div').length+' current tasks!';
+
+                 divForShowingNumOfTasks.appendChild(numOfTasks);
+
+
+                 //numOfTasks.remove();
+
+
+
+            } else{
+                alert('please input a task to continue')
+            }
+
+        }
+
+
+            //Now, we're going to create a delete item function:
+
+
+
+
+           function deleteCheck(e){
+
+            console.log(e.target); 
+
+            const item=e.target;//basically this is whatever we are clicking on(the li, trash btn, check btn etc)
+
+            if(item.classList[0]==='trash-btn'){
+                console.log('yup we clicked trash btn!');
+
+                const todo=item.parentElement;
+                //console.log(todo +' this is the parent element');
+
+                removeLocalTodos(todo);
+
+                //below we're adding a class of 'fall' to our parent element the todo div, if it doesn't aleady have the fall class. if it does already have it, this will remove it, if not it will add it-it's toggling:
+                //in our css, we give the fall class a transition effect that makes the div item we're clicking trash btn on, fall down and become invisible
+                todo.classList.add('fall');
+               
+
+                //Although the above step makes the div invisible, we still need to remove it, 
+                //but only after the transition effect(the falling down effect for deleted items), so here, we add an event listener called 'transtionend',
+                // which will run the callback func we defined, only AFTER our transition has occurred, this is a special js eventlistener that js has jsut for transitions
+                todo.addEventListener("transitionend", function(){
+                    todo.remove();
+                })
+
+            
+            } 
+
+            //This says, if our list item has as its first class, the class 'complete-btn'
+            //assign the list item's parentElement(in this case the div that encases the list item, its btns etc) to a const called todo; 
+            //then, sya, toggle a class on to that parent element div, so if the div has no class pf 'completed', then add it
+            //if it does already have a  class of 'completed', then remove that class from it
+            //this allows us to add a class of completed, when we click the  check btn, and so add a line through the list item and reduce its opacity
+            //then, if we change our mind that this item is not completed yet and we click on the check btn again, it will remove the 'completed' class from the div and all styling that goes with it
+
+            if(item.classList[0]==='complete-btn'){
+                console.log('yup we clicked complete btn!'); 
+
+                const todo=item.parentElement;
+                const todoText=todo.children[0].innerText;
+
+                todo.classList.toggle('completed');
+
+
+
+                if(todo.classList.contains('completed')){
+                 
+
+
+                 modal.style.display='block';
+              
+
+
+                
+                
+                    let completedArray;
+
+                if(!localStorage.getItem('completed')){
+                    completedArray=[];
+                } else{
+                    completedArray=JSON.parse(localStorage.getItem('completed'));
+                }
+
+                completedArray.push(todoText);
+
+                localStorage.setItem('completed', JSON.stringify(completedArray));
+
+                console.log('Hey '+JSON.parse(localStorage.completed).length + ' this is the length of the completed localStorage!!!!!'); 
+                  
+
+
+
+                //add comment below completedList saying how many completed tasks you have:
+   
+          
+                   numOfTasksComp.innerText='You have a total of '+ JSON.parse(localStorage.completed).length+' current tasks!! from getTodos func)--deleteCheck!---but this is still one too many';
+ 
+
+                    divForShowingNumOfTasksComp.appendChild(numOfTasksComp);
+
+            
+                 console.log(numOfTasksComp);
+
+
+
+                console.log(divForShowingNumOfTasksComp + ' this is from the deleteCheck func!!!');
+                 console.log(completedList.getElementsByTagName('div'));
+
+
+             
+
+
+                 //Here,let's add the item we marked complete from the normal todos to the completed list-this is just for display, so that we don't have to refresh the pg to see the change:
+
+                 
+
+
+                 console.log('yes this item in the completed list has a class of completed!!')
+
+
+const todoDiv= document.createElement('div');
+           
+           //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+           todoDiv.classList.add('todo');
+
+
+           //create  a list (li), give the li an innerText
+            const newTodo=document.createElement('li');
+             //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+            newTodo.innerText=todoText;
+             
+            //add a class of 'todo-item' to the li
+            newTodo.classList.add('todo-item');
+
+
+
+            //append the li to the new div we created:
+
+            todoDiv.appendChild(newTodo);
+
+
+            //make urgent clock button and append it to the div:
+
+            //actually we don't need an urgent button here as it is for the completed list & 
+            //completed items are done-u can only mark em uncomplete or delete them
+
+
+
+
+
+
+
+
+
+            //Create Completed Button:
+
+            const completedButton=document.createElement('button');
+
+            completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+            completedButton.classList.add('complete-btn');
+
+            todoDiv.appendChild(completedButton);
+
+
+
+            //Create a trash button:
+            const trashButton=document.createElement('button');
+
+            trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+            trashButton.classList.add('trash-btn');
+
+            todoDiv.appendChild(trashButton);
+
+
+            completedList.appendChild(todoDiv);
+
+//end of the just for display div creation and appending to the completed list
+
+
+
+
+
+
+
+
+
+              let todos;
+
+
+                
+                if(!localStorage.getItem('todos')){
+                    todos=[];
+                } else{
+                    todos=JSON.parse(localStorage.getItem('todos'));
+                }
+
+               let getIndex=todos.indexOf(todoText);
+
+                //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma ust means remove only one item;
+
+                todos.splice(getIndex, 1);
+
+                console.log('YUP! just removed completed item from the todos localStorage!');//this has worked so far, Temesgen Yesus! It removes the task from the todos localstorage when we press complete, but does it still add it to the completed localSTorage? -YES it does
+
+                //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+
+                localStorage.setItem('todos', JSON.stringify(todos)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+                //if you see the list and refresh, the item we removed is permanently gone, both from the list display and the localStorage!
+            
+
+                //let's make the div instantly invisible and fall from the main task list display as well, so we can see the removal instantlyas soon as we press complete:
+
+                todo.classList.add('makeCompleteInvisible');//makes it transparent, fall, then invisible
+
+                todo.addEventListener('transitionend', function(){
+                    todo.remove(); //this will actually remove the div node from the list fully, not just make it invisible
+                })
+
+                   //right now u have to refresh pg to see newly completed tasks added to the completed list display. 
+                   //But if we want, i think we could loop through the completed Array each time we 'complete' an item
+                   //and create a new display of completed items each time-ssems excessive, maybe add a little note saying refrsh to see latest completed tasks above the completed display?
+                
+
+
+
+
+                   numOfTasks.innerText='You have a total of '+ (todoList.getElementsByTagName('div').length-1)+' current tasks!! from deleteCheck(the one where we do completed)!';
+
+                 divForShowingNumOfTasks.appendChild(numOfTasks);
+
+                 console.log(numOfTasks);
+
+
+
+                console.log(divForShowingNumOfTasks + ' this is from the deleteCheck func where we do completed ! so had to make it todoList.getElementsByTagName(div).length minus 1 ');
+                console.log(todoList.getElementsByTagName('div'));
+            
+            } 
+        }
+
+
+
+
+            
+            if(item.classList[0]==='urgent-btn'){
+                console.log('yup we clicked urgent btn!'); 
+                const todo=item.parentElement;
+
+               const todoText=todo.children[0].innerText;
+                todo.classList.toggle('urgent');
+
+                if(todo.classList.contains('urgent')){
+                  
+
+                      //push it into the urgLocalArray
+
+                      
+
+
+                      let urgentLocArray;
+          
+               if(!localStorage.getItem('urg')){
+                        urgentLocArray=[];
+                    }else{
+                        urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                    }
+
+
+                    urgentLocArray.push(todoText);
+                    localStorage.setItem('urg', JSON.stringify(urgentLocArray));
+
+    
+                 }
+            }
+        
+        }
+
+
+    
+
+
+
+           function deleteCheckCompList(e){
+
+console.log(e.target); 
+
+const item=e.target;//basically this is whatever we are clicking on(the li, trash btn, check btn etc)
+
+if(item.classList[0]==='trash-btn'){
+    console.log('yup we clicked trash btn! On the complete list!!');
+
+    const todo=item.parentElement;
+    //console.log(todo +' this is the parent element');
+
+    removeLocalTodosComp(todo);
+
+    //below we're adding a class of 'fall' to our parent element the todo div, if it doesn't aleady have the fall class. if it does already have it, this will remove it, if not it will add it-it's toggling:
+    //in our css, we give the fall class a transition effect that makes the div item we're clicking trash btn on, fall down and become invisible
+    todo.classList.add('fall');
+   
+
+    //Although the above step makes the div invisible, we still need to remove it, 
+    //but only after the transition effect(the falling down effect for deleted items), so here, we add an event listener called 'transtionend',
+    // which will run the callback func we defined, only AFTER our transition has occurred, this is a special js eventlistener that js has jsut for transitions
+    todo.addEventListener("transitionend", function(){
+        todo.remove();
+    })
+
+
+} 
+
+//This says, if our list item has as its first class, the class 'complete-btn'
+//assign the list item's parentElement(in this case the div that encases the list item, its btns etc) to a const called todo; 
+//then, sya, toggle a class on to that parent element div, so if the div has no class pf 'completed', then add it
+//if it does already have a  class of 'completed', then remove that class from it
+//this allows us to add a class of completed, when we click the  check btn, and so add a line through the list item and reduce its opacity
+//then, if we change our mind that this item is not completed yet and we click on the check btn again, it will remove the 'completed' class from the div and all styling that goes with it
+
+if(item.classList[0]==='complete-btn'){
+    console.log('yup we clicked complete btn Again-time to remove item from completed & re-add item to normal list!'); 
+
+    const todo=item.parentElement;
+    const todoText=todo.children[0].innerText;
+
+    todo.classList.toggle('completed');
+
+
+
+   if(todo.classList.contains('completed')){
+     
+
+     console.log('yes this item in the completed list has a class of completed!!')
+
+
+     const todoDiv= document.createElement('div');
+                
+                //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+                todoDiv.classList.add('todo');
+
+
+                //create  a list (li), give the li an innerText
+                 const newTodo=document.createElement('li');
+                  //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+                 newTodo.innerText=todoText;
+                  
+                 //add a class of 'todo-item' to the li
+                 newTodo.classList.add('todo-item');
+    
+
+
+                 //append the li to the new div we created:
+
+                 todoDiv.appendChild(newTodo);
+
+
+                 //make urgent clock button and append it to the div:
+
+                 const urgentButton= document.createElement('button');
+                   urgentButton.innerHTML='<i class="far fa-clock"></i>';
+                   urgentButton.classList.add('urgent-btn');
+                   todoDiv.appendChild(urgentButton); 
+
+
+
+
+
+
+
+
+
+
+                 //Create Completed Button:
+
+                 const completedButton=document.createElement('button');
+
+                 completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+                 completedButton.classList.add('complete-btn');
+
+                 todoDiv.appendChild(completedButton);
+
+
+
+                 //Create a trash button:
+                 const trashButton=document.createElement('button');
+
+                 trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+                 trashButton.classList.add('trash-btn');
+
+                 todoDiv.appendChild(trashButton);
+
+
+                 todoList.appendChild(todoDiv);
+
+     
+
+    //the above is just a temporary div with list item removed from completed and added to the normal todos list-it should disappear when we refresh
+     console.log(todo + '.....woohoo?');
+
+
+    
+
+     
+     
+       // let completedArray;
+
+    //if(!localStorage.getItem('completed')){
+        //completedArray=[];
+    //} else{
+        //completedArray=JSON.parse(localStorage.getItem('completed'));
+   // }
+
+   // completedArray.push(todoText);
+
+    //localStorage.setItem('completed', JSON.stringify(completedArray));
+
+
+
+
+
+
+
+
+
+
+
+  let todos;//--------------------This WHOLE section doesnot belong in the deleteCheckCompList func cuz itis splicing todos and doesn't need to be in here!!!
+
+
+    
+    if(!localStorage.getItem('todos')){
+        todos=[];
+    } else{
+        todos=JSON.parse(localStorage.getItem('todos'));
+    }
+
+
+      todos.push(todoText);
+
+
+
+
+
+      //and now remove that same todoTextItem from the completed list cuz u ust un-completed it and sent it back to the normal todos list:
+
+
+
+
+
+
+       let completedArray;
+
+    if(!localStorage.getItem('completed')){
+        completedArray=[];
+    } else{
+        completedArray=JSON.parse(localStorage.getItem('completed'));
+    }
+
+
+let getIndex=completedArray.indexOf(todoText);
+
+  completedArray.splice(getIndex, 1);
+
+    localStorage.setItem('completed', JSON.stringify(completedArray));
+
+
+
+
+
+    let numOfTasksCompleted=JSON.parse(localStorage.completed).length;
+
+     numOfTasksComp.innerText='You have a total of '+ numOfTasksCompleted+' current tasks!! --!!! from deleteCheckCompList(the one where we do completed)!';
+
+     divForShowingNumOfTasksComp.appendChild(numOfTasksComp);
+
+
+  // let getIndex=todos.indexOf(todoText);
+
+    //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma ust means remove only one item;
+
+   // todos.splice(getIndex, 1);
+
+    //console.log('YUP! just removed completed item from the todos localStorage!');//this has worked so far, Temesgen Yesus! It removes the task from the todos localstorage when we press complete, but does it still add it to the completed localSTorage? -YES it does
+
+    //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+
+    localStorage.setItem('todos', JSON.stringify(todos)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+    //if you see the list and refresh, the item we removed is permanently gone, both from the list display and the localStorage!
+
+//This is where I would end commenting out------------------*/
+    //let's make the div instantly invisible and fall from the main task list display as well, so we can see the removal instantlyas soon as we press complete:
+
+    todo.classList.add('makeCompleteInvisible');//makes it transparent, fall, then invisible
+
+    todo.addEventListener('transitionend', function(){
+        todo.remove(); //this will actually remove the div node from the list fully, not just make it invisible
+    })
+
+       //right now u have to refresh pg to see newly completed tasks added to the completed list display. 
+       //But if we want, i think we could loop through the completed Array each time we 'complete' an item
+       //and create a new display of completed items each time-ssems excessive, maybe add a little note saying refrsh to see latest completed tasks above the completed display?
+    
+
+
+       let numOfTasksNew=JSON.parse(localStorage.todos).length;
+
+
+console.log( 'todos are now ' +numOfTasksNew);
+ 
+
+
+
+       numOfTasks.innerText='You have a total of '+ numOfTasksNew+' current tasks!! from deleteCheckCompList(the one where we do completed)!';
+
+     divForShowingNumOfTasks.appendChild(numOfTasks);
+
+     console.log(numOfTasks);
+
+
+
+    console.log(divForShowingNumOfTasks + ' this is from the deleteCheck func where we do completed ! so had to make it todoList.getElementsByTagName(div).length minus 1 ');
+    console.log(todoList.getElementsByTagName('div'));
+
+
+
+} 
+}
+
+
+
+
+
+if(item.classList[0]==='urgent-btn'){
+    console.log('yup we clicked urgent btn!'); 
+    const todo=item.parentElement;
+
+   const todoText=todo.children[0].innerText;
+    todo.classList.toggle('urgent');
+
+    if(todo.classList.contains('urgent')){
+      
+
+          //push it into the urgLocalArray
+
+          
+
+
+          let urgentLocArray;
+
+   if(!localStorage.getItem('urg')){
+            urgentLocArray=[];
+        }else{
+            urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+        }
+
+
+        urgentLocArray.push(todoText);
+        localStorage.setItem('urg', JSON.stringify(urgentLocArray));
+
+
+     }
+}
+
+}
+
+
+
+
+          //Now, we're going to add a filter function that will allow us to filter and display our items by All, Completed, or Uncompleted:
+
+          function filterTodo(e){
+
+           const todos=todoList.childNodes;//this grabs the entire ul and all its childNodes(the div elements containing lis) and returns all the ul's childNodes as an array to us
+            //console.log(todos);
+
+            todos.forEach(function(item){ //we are sying for each div in our array of childNodes, run this function:
+
+
+
+                switch(e.target.value){ //run a switch() case,saying depending on the value of the target of our click event(the filter options are the targets of our click event)
+
+                    case'all': //if the filter option we clicked on had a value of 'all', then show all items in list normally(flex)
+
+                    heading.innerText="bigList.";
+                    console.log('all items shown');
+
+                     item.style.display='flex';
+
+
+
+                     
+                    break;
+
+
+
+                   case 'completed': //if the filter option we clicked on had a value of 'completed', then show all items in list that have a class name of 'completed' normally(flex)--those who don't have this class name, hide them by giving them a style of display: none
+                    
+                   heading.innerText="Tasks you've completed:";
+
+                   
+                   if (item.classList.contains('completed')){
+                     console.log(item);
+
+                     item.style.display='flex';
+                     
+                   } else{
+                    console.log('not completed');
+                    item.style.display='none';
+                  }
+                break;
+            
+
+                /* case 'urgent':
+
+                 
+                heading.innerText='What you need to complete today(urgent):';
+
+                   
+                 if(item.classList.contains('urgent')){
+
+                    console.log(item);
+
+
+                    const itemText=item.children[0].innerText;
+                    console.log(itemText);
+
+
+
+                    console.log('we pressed urgent!!!!');
+
+
+                    
+
+
+                //let urgentLocArray;
+          
+                if(!localStorage.getItem('urg')){
+                        urgentLocArray=[];
+                    }else{
+                        urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                    }
+
+
+                    //urgentLocArray.push(itemText);
+                    //localStorage.setItem('urg', JSON.stringify(urgentLocArray));
+
+
+
+
+
+                    
+
+                    item.style.display='flex';
+
+                 } else {
+                     console.log('not urgent tasks');
+                     item.style.display='none';
+                    
+                 } 
+                 break;--------------------------------------NOTnecessary now, as we removed urgent option 
+                 & were using priority btn instead */
+
+
+                case 'uncompleted'://if the filter option we clicked on had a value of 'uncompleted', then show all items in list that do NOT have a class name of 'completed' normally(flex)--those who DO have a class name of 'completed', hide them by giving them a style of display: none
+                
+                
+                heading.innerText="Tasks to complete:";
+                
+                if (!item.classList.contains('completed')){
+                     console.log(item + 'is uncompl');
+
+                    item.style.display='flex';
+
+                } else {
+                    console.log('not uncompleted');
+
+                    item.style.display='none';
+                }
+               
+                 break;
+
+                 //default: 
+                 //item.style.display='flex'; //in any other case, just show the list normally---display: flex
+
+                } //end of switch() statement
+                
+            }); //end of 
+
+          }
+
+
+
+
+          //Now, we will make a function to save our todos  to localStorage:
+          //Note: we will call this function all the way up in our addTodo() function, each time we add an item to our todo list, we will call this function defined below and save it to our localStorage
+
+
+          function saveLocalTodos(todo){
+
+            let todos; //create a variable called todos;
+
+            if(!localStorage.getItem('todos')){ //check if localStorage has a key called 'todos' saved in it yet. If it does not, then set the variable todos to an empty array
+
+                todos=[];
+
+            } else{
+
+                todos=JSON.parse(localStorage.getItem("todos"));//However, if localStorage.getItems('todos') DOES exist, we then set the variable todos to a JSON.parsed version of localStorage.getItem('todos')-this will return an array of strings, with each task we input into our form as a string
+            }
+              todos.push(todo); // to that array(whether it is the empty array or it is the array made from the JSON.parsed localStorage.getItem('todos') )--we are saying, push the todo into that array of todos, (when we call this function from addTodos later, we will pass in the todoInput.value as the parameter)
+              localStorage.setItem('todos', JSON.stringify(todos));//then we're saying save the JSON.stringified version of our todos array under the key 'todos', to our localStorage
+
+              console.log(todos); //console.log our todos array, just to see how each item we add to our list of tasks gets pushed into the todos array
+               console.log(localStorage.getItem('todos'))//see how we now have a key called todos in our localStorage and it is an array of each task we input in our input?
+          
+
+
+              /*let urgentLocArray;
+          
+               if(!localStorage.getItem('urg')){
+                        urgentLocArray=[];
+                    }else{
+                        urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                    }
+
+
+                    urgentLocArray.push(todo);
+                    localStorage.setItem('urg', JSON.stringify(urgentLocArray));
+
+          */
+          
+          
+            }
+
+
+
+
+
+            function getTodos(){
+
+              
+
+                
+                todoInput.focus();
+                //urgList.style.display='none';
+
+                let todos;
+
+
+                if(!localStorage.getItem('todos')){ //check if localStorage has a key called 'todos' saved in it yet. If it does not, then set the variable todos to an empty array
+
+                         todos=[];
+
+                     } else{
+
+               todos=JSON.parse(localStorage.getItem("todos"));//However, if localStorage.getItems('todos') DOES exist, we then set the variable todos to a JSON.parsed version of localStorage.getItem('todos')-this will return an array of strings, with each task we input into our form as a string
+               }
+
+               todos.forEach(function(item){
+                 //Create a div called todoDiv
+                const todoDiv= document.createElement('div');
+                
+                //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+                todoDiv.classList.add('todo');
+
+
+                //create  a list (li), give the li an innerText
+                 const newTodo=document.createElement('li');
+                  //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+                 newTodo.innerText=item;
+                  
+                 //add a class of 'todo-item' to the li
+                 newTodo.classList.add('todo-item');
+    
+
+
+                 //append the li to the new div we created:
+
+                 todoDiv.appendChild(newTodo);
+
+                 todoInput.value='';
+
+
+                 
+                 //make urgent clock button and append it to the div:
+
+                   const urgentButton= document.createElement('button');
+                   urgentButton.innerHTML='<i class="far fa-clock"></i>';
+                   urgentButton.classList.add('urgent-btn');
+                   todoDiv.appendChild(urgentButton); 
+
+
+
+
+
+
+
+
+
+
+                 //Create Completed Button:
+
+                 const completedButton=document.createElement('button');
+
+                 completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+                 completedButton.classList.add('complete-btn');
+
+                 todoDiv.appendChild(completedButton);
+
+
+
+                 //Create a trash button:
+                 const trashButton=document.createElement('button');
+
+                 trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+                 trashButton.classList.add('trash-btn');
+
+                 todoDiv.appendChild(trashButton);
+
+
+                 //attach new todo div with its list item and completed and trash btns to the todoList(ul);
+
+                 todoList.appendChild(todoDiv);
+                
+                })
+
+
+
+
+
+               /* if(!localStorage.getItem('urg')){
+                        urgentLocArray=[];
+                    }else{
+                        urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                    }
+
+
+
+
+                    urgentLocArray.forEach(function(item){
+                 //Create a div called todoDiv
+                const todoDiv= document.createElement('div');
+                
+                //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+                todoDiv.classList.add('todo');
+
+
+                //create  a list (li), give the li an innerText
+                 const newTodo=document.createElement('li');
+                  //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+                 newTodo.innerText=item;
+                  
+                 //add a class of 'todo-item' to the li
+                 newTodo.classList.add('todo-item');
+    
+
+
+                 //append the li to the new div we created:
+
+                 todoDiv.appendChild(newTodo);
+
+                 todoInput.value='';
+
+
+                 
+                 //make urgent clock button and append it to the div:
+
+                   const urgentButton= document.createElement('button');
+                   urgentButton.innerHTML='<i class="far fa-clock"></i>';
+                   urgentButton.classList.add('urgent-btn');
+                   todoDiv.appendChild(urgentButton); 
+
+
+
+
+
+
+
+
+
+
+                 //Create Completed Button:
+
+                 const completedButton=document.createElement('button');
+
+                 completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+                 completedButton.classList.add('complete-btn');
+
+                 todoDiv.appendChild(completedButton);
+
+
+
+                 //Create a trash button:
+                 const trashButton=document.createElement('button');
+
+                 trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+                 trashButton.classList.add('trash-btn');
+
+                 todoDiv.appendChild(trashButton);
+
+
+                 //attach new todo div with its list item and completed and trash btns to the todoList(ul);
+
+
+                 
+                 urgList.appendChild(todoDiv);
+                
+                }) */
+
+
+
+
+
+
+
+
+
+
+
+
+                let completedArray;
+
+if(!localStorage.getItem('completed')){
+        completedArray=[];
+    }else{
+        completedArray=JSON.parse(localStorage.getItem('completed'));
+    }
+
+
+
+    completedArray.forEach(function(item){
+       //Create a div called todoDiv
+      const todoDiv= document.createElement('div');
+      
+      //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+      todoDiv.classList.add('todo');
+
+
+      //create  a list (li), give the li an innerText
+       const newTodo=document.createElement('li');
+        //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+       newTodo.innerText=item;
+        
+       //add a class of 'todo-item' to the li
+       newTodo.classList.add('todo-item');
+
+
+
+       //append the li to the new div we created:
+
+       todoDiv.appendChild(newTodo);
+
+       todoInput.value='';
+
+
+       
+       //make urgent clock button and append it to the div----not necessary anymore cuz once item is in completed list, it can't be urgent anymore anyway:
+
+         //const urgentButton= document.createElement('button');
+         //urgentButton.innerHTML='<i class="far fa-clock"></i>';
+         //urgentButton.classList.add('urgent-btn');
+         //todoDiv.appendChild(urgentButton); 
+
+
+
+       //Create Completed Button---not necessary anymore-cuz if I want to re-add item to the todo list< i can just type it in-only need delete btn:
+
+       const completedButton=document.createElement('button');
+
+       completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+       completedButton.classList.add('complete-btn');
+
+       todoDiv.appendChild(completedButton);
+
+
+
+       //Create a trash button:
+       const trashButton=document.createElement('button');
+
+       trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+       trashButton.classList.add('trash-btn');
+
+       todoDiv.appendChild(trashButton);
+
+
+       //attach new todo div with its list item and completed and trash btns to the completedList(ul);
+
+
+       
+       completedList.appendChild(todoDiv);
+
+
+
+
+       //add comment below completedList saying how many completed tasks you have:
+   
+          
+       numOfTasksComp.innerText='You have a total of '+ JSON.parse(localStorage.completed).length+' current tasks!! from getTodos func)!';
+ 
+
+         divForShowingNumOfTasksComp.appendChild(numOfTasksComp);
+
+            
+                 console.log(numOfTasksComp);
+
+
+
+                console.log(divForShowingNumOfTasksComp + ' this is from the getTodos func!!!');
+                console.log(completedList.getElementsByTagName('div'));
+      
+      })
+
+
+
+
+
+      
+      //const numOfTasks=document.createElement('p');
+                 numOfTasks.innerText='You have a total of '+ todoList.getElementsByTagName('div').length+' current tasks!!!!!! This is from getTodos func';
+
+                 divForShowingNumOfTasks.appendChild(numOfTasks);
+
+                 console.log(numOfTasks);
+
+                 console.log(todoList.getElementsByTagName('div'));
+
+    
+
+            }//end of function getTodos
+
+
+
+
+
+            //Now, we'll make a function that removes specific items from localStorage, and thus, from the list itself
+
+               //when we call this function, we are passing in const todo, which is the parentElement, which is the div we create each time we add a task
+                //so when we say todo.children[0] below, we are saying get the 1st child of the div we are clicking on-which will be the list item
+            function removeLocalTodos(todo){
+
+
+                if(!localStorage.getItem('todos')){
+                    todos=[];
+                } else{
+                    todos=JSON.parse(localStorage.getItem('todos'));
+                }
+
+                const todoIndex = todo.children[0].innerText;//so when we say todo.children[0], we are saying get the 1st child of the div we are clicking on, then get the innerText of that child(that will be the innerText of our li item)
+                console.log('todoIndex is: '+ todoIndex);
+
+
+
+                const getIndex=todos.indexOf(todoIndex);//get indexOf item that has this specific innerText
+                console.log(getIndex);//this will return the index of that item with that specific text to us
+
+
+
+                //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma ust means remove only one item;
+
+                todos.splice(getIndex, 1);
+
+                //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+
+                localStorage.setItem('todos', JSON.stringify(todos)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+                //if you see the list and refresh, the item we removed is permanently gone, both from the list display and the localStorage!
+            
+            
+            
+            
+            
+            
+            
+            /*
+            
+                if(!localStorage.getItem('urg')){
+                    urgentLocArray=[];
+                } else{
+                    urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+                }
+
+                const todoIndexUrg = todo.children[0].innerText;//so when we say todo.children[0] below, we are saying get the 1st child of the div we are clicking on, then get the innerText of that child(that will be the innerText of our li item)
+                console.log('todoIndexUrg is: '+ todoIndexUrg);
+
+
+
+                const getIndexUrg=todos.indexOf(todoIndexUrg) //get indexOf item that has this specific innerText
+                console.log(getIndexUrg);//this will return the index of that item with that specific text to us
+
+
+
+                //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma ust means remove only one item;
+
+                urgentLocArray.splice(getIndexUrg, 1);
+
+                //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+
+                localStorage.setItem('urg', JSON.stringify(urgentLocArray)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+               */
+
+
+
+
+              //removing from localstorae for the completed key in localStorage:
+
+                if(!localStorage.getItem('completed')){
+                    completedArray=[];
+                } else{
+                    completedArray=JSON.parse(localStorage.getItem('completed'));
+                }
+
+                const todoIndexComp = todo.children[0].innerText;//so when we say todo.children[0] below, we are saying get the 1st child of the div we are clicking on, then get the innerText of that child(that will be the innerText of our li item)
+                console.log('todoIndexComp is: '+ todoIndexComp);
+
+
+
+                const getIndexComp=todos.indexOf(todoIndexComp) //get indexOf item that has this specific innerText
+                console.log(getIndexComp);//this will return the index of that item with that specific text to us
+
+
+
+                //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma just means remove only one item;
+
+           // completedArray.splice(getIndexComp, 1);----THIS was causing the PROBLEM, we DO not need to splice from completedArray here or else it will delete frm completed list every time we delete from our normal todos list!!!!
+
+                //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+                 //psss...i don't think we need this here either boo, we aren't changing anything in the completed localstorage array anyway....TRY to remove this code below:
+                //localStorage.setItem('completed', JSON.stringify(completedArray)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+               
+            
+            
+
+                //Great, it works, Temesgen Yesusaye! 
+                //next will be to delete the urgent item right frm the urgent list itself!
+            
+            
+            
+            
+              
+            
+            
+                //const numOfTasks=document.createElement('p');
+                 numOfTasks.innerText='You have a total of '+ JSON.parse(localStorage.todos).length+' current tasks!! from removeLocalTodos!';
+
+                 divForShowingNumOfTasks.appendChild(numOfTasks);
+
+                 console.log(numOfTasks);
+
+
+
+                console.log(divForShowingNumOfTasks + ' this is from the removeLocal function! so had to make it todoList.getElementsByTagName(div).length minus 1 ');
+                console.log(todoList.getElementsByTagName('div'));
+
+
+
+
+
+
+
+
+            //add comment below completedList saying how many completed tasks you have:
+       numOfTasksComp.innerText='You have a total of '+ (completedList.getElementsByTagName('div').length -1)+' current tasks!! from removeLocalTodos func)! so had to make it completedList.getElementsByTagName(div).length minus 1';
+
+divForShowingNumOfTasksComp.appendChild(numOfTasksComp);
+
+console.log(numOfTasksComp);
+
+
+
+console.log(divForShowingNumOfTasksComp + ' this is from the removeLocalTodos func!!!');
+console.log(completedList.getElementsByTagName('div'));
+            
+            
+            }
+
+              
+
+
+            
+           
+              
+            
+            
+               //Now, we'll make a function that removes specific items from the completed array of localStorage, and thus, from the list itself
+
+               //when we call this function, we are passing in const todo, which is the parentElement, which is the div we create each time we add a task
+                //so when we say todo.children[0] below, we are saying get the 1st child of the div we are clicking on-which will be the list item
+                function removeLocalTodosComp(todo){
+
+
+                  
+
+              console.log('THIS IS removing from Completed List, even tho we clicked delete on normal list!!!');
+    
+//removing from localstorae for the completed key in localStorage:
+
+
+let completedArray;
+
+  if(!localStorage.getItem('completed')){
+      completedArray=[];
+  } else{
+      completedArray=JSON.parse(localStorage.getItem('completed'));
+  }
+
+  const todoIndexComp = todo.children[0].innerText;//so when we say todo.children[0] below, we are saying get the 1st child of the div we are clicking on, then get the innerText of that child(that will be the innerText of our li item)
+  console.log('todoIndexComp is: '+ todoIndexComp);
+
+
+
+  const getIndexComp=completedArray.indexOf(todoIndexComp) //get indexOf item that has this specific innerText
+  console.log(getIndexComp);//this will return the index of that item with that specific text to us
+
+
+
+  //so splice(remove that item which has that specific index from the todos array)--the number 1 after the comma just means remove only one item;
+
+completedArray.splice(getIndexComp, 1);
+
+console.log('THIS IS removing from Completed List, even tho we clicked delete on normal list!!!');
+
+  //Now, reset the localstorage so that it reflects the changes we've made by deleting an item:
+
+  localStorage.setItem('completed', JSON.stringify(completedArray)); //NOTE.we need to JSON.stringify this when we set it as only strings can be saved in localStorage!
+
+ 
+
+
+
+  //Great, it works, Temesgen Yesusaye! 
+  //next will be to delete the urgent item right frm the urgent list itself!
+
+
+
+
+
+
+
+  //const numOfTasks=document.createElement('p');
+   numOfTasks.innerText='You have a total of '+ (todoList.getElementsByTagName('div').length-1)+' current tasks!! from removeLocalTodos!';
+
+   divForShowingNumOfTasks.appendChild(numOfTasks);
+
+   console.log(numOfTasks);
+
+
+
+  console.log(divForShowingNumOfTasks + ' this is from the removeLocal function! so had to make it todoList.getElementsByTagName(div).length minus 1 ');
+  console.log(todoList.getElementsByTagName('div'));
+
+
+
+
+
+
+
+
+//add comment below completedList saying how many completed tasks you have:
+numOfTasksComp.innerText='You have a total of '+ (completedList.getElementsByTagName('div').length -1)+' current tasks!! from removeLocalTodosComp func)! so had to make it completedList.getElementsByTagName(div).length minus 1';
+
+divForShowingNumOfTasksComp.appendChild(numOfTasksComp);
+
+console.log(numOfTasksComp);
+
+
+
+console.log(divForShowingNumOfTasksComp + ' this is from the removeLocalTodosComp func!!!');
+console.log(completedList.getElementsByTagName('div'));
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            var arra=['Jan', 'feb', 'march', 'april', 'may'];
+
+            var getIndexOf=arra.indexOf('march');
+
+            console.log(getIndexOf); //returns an index of 2 cuz that's where the string 'march' is positioned in our array
+
+            console.log(arra.splice(getIndexOf, 2));//now we say, splice from the arra array the item at index 2, and actually, remove 2 items from that point on
+
+            console.log(arra);//so now our arra array is just ['Jan', 'feb', 'may'] because we removed march and april(cuz we specified to remove 2 items)
+
+
+
+
+
+
+
+           //Maybe Add:
+
+                  //A display screen with:------------------
+
+                  //What you want to complete today(optional): list of all items marked optional-done temesgen Yesus! -----------
+
+                  //What you need to complete today(urgent): list of all items marked urgent-done-------------------
+
+
+
+
+
+          //so i want to create a separate array of urgentTodos, so every time we press the alarmclock btn, 
+          //it pushes that todo into this urgent array--done Temesgen Yesus!----------------------------------------
+
+          
+
+
+
+
+          //when I select priority, i want to show the urgent array's
+          // items as a list----done ------------------------------------
+
+          //BUT, i want to be able to delete the urgent items when I hit delete---done Temesgen Yesus!-----------------
+
+           //complete them when I hit complete--------i can put line thru it, but it isn't being pushed tp completedArray yet
+
+          //When I complete them, i want them to be added to our separate list of completes in normal list pg
+
+          //When I add task to completed list, I want to show it immediately being in the completed list w/out having to refresh like I currently do----pretty much solved, Temesgen Yesus! solution seems to be creating a temporary list just for display until refreshing and then after that, using getTodos func 
+
+
+
+
+
+          //-----------think it's done!When I delete them I want them to be deleted from both the normal and urgent lists--we've now deleted directly from the urgent list, to remove from localStorage.getItem('todo') from the normal pg, we could maybe pass a variable in the url query 
+
+          //----------------NOTE: i dont think this is that important---instead, I removed the urgent button: When I un-urgent them, I want them to be deleted from the urgent list and returned to the normal list(it may be fine to permanently leave them in the normal list but without being urgent anymore)
+
+        //When I click complete and add the completed item to the separate complete list on normal pg, 
+        //I want to not have an urgent btn for that item anymore---done---------------
+
+
+          //I want to delete the new priority buttons ability to add urgent list to bottom of pg, just want it to take me to-------
+          //priority pg only--------Done, Temesgen!--------------------------------------------------------------
+
+
+          //Want to be able to click complete, or delete on priority pg and be able to a cross out line for completed-------------------DONE!!
+          //and to delete item from priority list and also from localStorage's todo and urg lists----------------------------DONE!!!!!!!!!!!!
+          //want to remove the alarm clock btn on priority pg's list items, cuz i don't need it there------Done!--------------------
+
+
+           ///////////////////////------------------------IDEA-----------------------------------/////////
+          //want to have goal, number of tasks completed---and a progress bar showing how far til then
+          //And a message reminding u of treat you've set for yourself when u reach goal
+          //like----75% done on you way to a...cappucino break!
+
+
+
+
+           //Create a Dashboard/Stats pg where you land after login-shows u how many completed tasks, how many urgent tsks, how many non-urgent todos------done, temesgen Yesus!
+
+           //Also lets u see your most important goal currently(and change this with a popup form)
+
+
+
+
+           //Current Bugs List:
+
+
+           //can't click enter on input to dd tasks to lists or localStorage-----try adding a keydown event that checks for 13(enter btn) and calls addTodos just like add btn does
+
+           //clicking enter on input takes me directly to priority/urgent tasks pg
+
+
+
+           //WHY is deleting an item from the completedList NOT deleting it from the completed localStorage array --------------Done temesgen YesusS!
+           //BUT instead is deleting an item from the normal todos list & localStorage nd the urgent list and urg localStorage?----answer, i needed to set a separate deletCheck func & removeLocalTodosComp just for the completed array, so we weren't deleting from todos & completed at the same time, temesgen Yesus!
+
+
+
+        //BUT why is deleting a task from the normal non-urgent list 
+        //also deleting a task from the completed list at the same time!!?-----------This was solved temesgen Yesus!
+        // it was cuz i was splicing from the completedArray in removeLocalTodos function even though we should only do so in removeLocalTodosComp function
+
+
+
+
+        //Now why when I press complete on a task on the completed list, why does it re-add that task to the completed list(so makes multiples)
+          //And ALSO it removes an item from the todos list and the todos list localStorage why????-----Okay found out I was writing bad code in deleteCheckComp function!!
+        
+        
+        
+        
+        
+        function showUrgList(e){
+
+            
+            e.preventDefault();
+  console.log('this is the urg list!');
+
+
+
+ window. location. replace("displayUrgentTasksPg.html")
+
+ 
+
+
+
+
+ //todoUlDiv.classList.toggle('displayNone');
+
+ //showUrgent.classList.toggle('priorityBtnFreeze');
+
+
+
+
+/*
+  if (document.querySelector('.todo-container')) {
+
+if (document.querySelector('.todo-container').style.display == 'none') {
+    document.querySelector('.todo-container').style.display = 'block';
+    urgList.style.display = 'none';
+}
+else {
+    document.querySelector('.todo-container').style.display = 'none';
+    urgList.style.display = 'block';
+}
+}*/
+
+/*if(document.querySelector('.todo-container').style.display='flex'){
+  document.querySelector('.todo-container').style.display='none';
+  console.log('original ul gone!')
+} else if(document.querySelector('.todo-container').style.display='none'){
+    document.querySelector('.todo-container').style.display='flex';
+} */
+
+
+//the above only works well on first click, then after it starts adding divs to the ul
+
+
+
+let urgentLocArray;
+
+if(!localStorage.getItem('urg')){
+        urgentLocArray=[];
+    }else{
+        urgentLocArray=JSON.parse(localStorage.getItem('urg'));
+    }
+
+
+
+    urgentLocArray.forEach(function(item){
+       //Create a div called todoDiv
+      const todoDiv= document.createElement('div');
+      
+      //add a class of 'todo' to the new div, same class as when we created divs in addTodos() function at top of code
+      todoDiv.classList.add('todo');
+
+
+      //create  a list (li), give the li an innerText
+       const newTodo=document.createElement('li');
+        //set innerText of new li to the current item in our JSON.parsed localStorage todos array
+       newTodo.innerText=item;
+        
+       //add a class of 'todo-item' to the li
+       newTodo.classList.add('todo-item');
+
+
+
+       //append the li to the new div we created:
+
+       todoDiv.appendChild(newTodo);
+
+       todoInput.value='';
+
+
+       
+       //make urgent clock button and append it to the div:
+
+         const urgentButton= document.createElement('button');
+         urgentButton.innerHTML='<i class="far fa-clock"></i>';
+         urgentButton.classList.add('urgent-btn');
+         todoDiv.appendChild(urgentButton); 
+
+
+
+       //Create Completed Button:
+
+       const completedButton=document.createElement('button');
+
+       completedButton.innerHTML="<i class='fas fa-check'></i>";
+
+       completedButton.classList.add('complete-btn');
+
+       todoDiv.appendChild(completedButton);
+
+
+
+       //Create a trash button:
+       const trashButton=document.createElement('button');
+
+       trashButton.innerHTML="<i class='fas fa-trash'></i>";
+
+       trashButton.classList.add('trash-btn');
+
+       todoDiv.appendChild(trashButton);
+
+
+       //attach new todo div with its list item and completed and trash btns to the todoList(ul);
+
+
+       
+       urgList.appendChild(todoDiv);
+      
+      })
+
+     
+ } 
+
+
+    
+
+
+        </script>
+    </body>
+</html>
