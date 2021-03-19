@@ -23,9 +23,9 @@
 
     <div id='containerStatsDiv'>
      <div id='allStatsDiv'>
-        <div class='urgentStats'><div class='circleDivSmall'></div><span id='urgentStatSpan'>9 </span><div>urgent tasks</div></div>
-        <div class='nonUrgentStats'><div class='circleDivSmall'></div><span id='nonUrgentStatSpan'>7 </span><div>non-urgent tasks</div></div>
-        <div class='completedStats'><div class='circleDivSmall'></div><span id='completedStatSpan'>5 </span><div>completed tasks</div></div>
+        <div class='urgentStats'><div class='circleDivSmall'></div><span id='urgentStatSpan'>9 </span><div><a href='displayUrgentTasksPg.html'>urgent tasks</a></div></div>
+        <div class='nonUrgentStats'><div class='circleDivSmall'></div><span id='nonUrgentStatSpan'>7 </span><div><a href='yetAnotherToDoListDvEdMyVersion.html'>non-urgent tasks</a></div></div>
+        <div class='completedStats'><div class='circleDivSmall'></div><span id='completedStatSpan'>5 </span><div><a href='yetAnotherToDoListDvEdMyVersion.html'id='goToCompletedTasks'>completed tasks</a></div></div>
     </div> 
 </div>
 
@@ -54,6 +54,48 @@
 
 
 
+
+<div class='modal' id='modal'>
+
+
+    <div class='modal-header0'>
+        <div class='title'></div>
+        <button id='close-btn'>&times;</button>
+    </div>
+    <div class='modal-header2'>
+
+        <div id='iconDiv'><i class="fas fa-check-circle"></i></div>
+        <div>Hey there!</div>
+        <div id='modalMsg'>Let's get started!</div>
+    </div> 
+
+    <div class='modal-header'>
+        <div class='nothinModal'></div>
+        
+    </div>
+    
+   
+    <div id='iconDiv'><i class="fas fa-check-circle"></i></div>
+  
+    <div id='modalBody'> 
+
+
+        <p id='modalBodyQuestion'>What is your most important goal currently? We'll help you keep it front and center!</p>
+       
+    </div> 
+
+
+    <div id='modalInput'>
+        <input type='text'class='mainGoalInput'/>
+
+        <button class='addNewGoal' type='submit'>
+            <i class='fas fa-plus-square'></i>
+        </button>
+
+    </div>
+   
+</div>
+
         <script>
             
             //Variables:
@@ -62,11 +104,93 @@
            const completedStatSpan=document.getElementById('completedStatSpan');
 
 
+           const changeGoalBtn=document.getElementById('changeGoalBtn');
+           const modal=document.getElementById('modal');
+           const closeBtn=document.getElementById('close-btn');
+
+           const addGoalInput=document.querySelector('.mainGoalInput');
+
+           const addNewGoalBtn=document.querySelector('.addNewGoal');
+
+           const mostImportantGoalCurrently=document.getElementById('goal');
+
+
+
+            //setting the most important goal on dashboard pg to the goal saved in localStorage's mainGoalCurrently key:
+           if(localStorage.getItem('mainGoalCurrently')){
+
+            const vipGoal=JSON.parse(localStorage.getItem('mainGoalCurrently'));
+
+            mostImportantGoalCurrently.innerHTML=vipGoal;
+
+           };
+
+           
+
+
+
+
+
 
 
            //Event Listeners:
 
             document.addEventListener('DOMContentLoaded', getToDoStats);
+
+
+           
+            
+
+
+            changeGoalBtn.addEventListener('click', function(){
+
+
+                console.log('show that modal form yall!');
+                modal.style.display='block';
+            });
+
+
+
+
+
+            closeBtn.addEventListener('click', function(){
+                console.log('close this modal now!');
+
+                modal.style.display='none';
+            }) 
+
+
+
+            addNewGoalBtn.addEventListener('click', function(){
+
+                console.log('clicked the modal button now!');
+
+                 let inputVal=addGoalInput.value;
+
+                 if(inputVal){
+                     localStorage.setItem('mainGoalCurrently', JSON.stringify(inputVal));
+
+                    mostImportantGoalCurrently.innerHTML=JSON.parse(localStorage.getItem('mainGoalCurrently'));
+                   
+
+                    addGoalInput.value='';
+                    
+                 }
+                 
+            })
+
+
+
+
+
+
+
+
+
+
+
+
+            //Functions:
 
 
             function getToDoStats(){
