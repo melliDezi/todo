@@ -671,6 +671,26 @@ and (orientation: portrait) {
    .select{
     width: 13vh;
    }
+} 
+
+
+
+@media only screen and (max-width: 414px) {
+    form input {
+        padding: 0.5rem;
+        font-size: 2rem;
+        border: none;
+        width: 36vh;
+        margin-left: 28px;
+        background-color: var(--bg-color);
+        
+        
+        box-shadow: var(--nm);
+        transition: box-shadow 0.3s ease-in-out;
+    }
+   .select{
+    width: 13vh;
+   }
 }
 
 /* Landscape */
