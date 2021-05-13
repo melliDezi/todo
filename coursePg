@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="EN">
+
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta http-equiv="X-UA-Compatible" content="ie=edge">
+      <title>Responsive Figma Prototype</title>
+
+      <link rel='stylesheet' href='responsiveFigmaPrototypeDesignCourse.css'>
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat&display=swap');
+        </style>
+       <style>
+        @import url('https://fonts.googleapis.com/css2?family=Work+Sans&display=swap');
+        </style>
+
+  </head>
+
+
+   <body>
+       <div class='proto-container'>
+           <div class='proto'></div>
+           <div class='proto'></div>
+           <div class='proto'></div>
+           <div class='proto'></div>
+       </div>
+
+
+       <div class='container'>
+           <div class='inner'>
+               <div class='left'>
+                   <img src='logo ux underline.svg' class='logo'>
+
+                   <div class='content'>
+                       <h1>Complete <span>UI Design Course</span></h1>
+
+                       <p class=''>Tired of producing sub-par UI designs? UIAPP has also been created as an interactive app, to help our users to comment and make suggestions regarding various aspects such as features and later improvements.</p>
+                       <p class='light'>Producing sub-par UI designs? It has also been created as an interactive app</p>
+                    </div>
+
+               </div>
+
+
+
+
+
+               <div class='right'>
+              
+
+                <div class='content'>
+                    
+                    <p class='getNotified'>Get notified when I release the course!</p>
+                    <input type='text' name='email' id='email' placeholder='your email'/><button class='notify'>Notify Me</button>
+
+                    <div class='attention'>
+                        <img  class='personImg' alt='person image' src='nelson liu icon.png'/>
+                        <img  class='arrowImg' alt='arrow pointing to email form' src='https://s3-us-west-2.amazonaws.com/s.cdpn.io/2621168/arrow_copy.svg'/>
+                    </div>
+                 </div>
+
+            </div>
+           </div>
+       </div>
+
+       <script>
+           let left= document.querySelector('.left');
+
+           let content= document.querySelector('.content');
+           let protos= document.querySelectorAll('.proto');
+
+
+
+
+
+
+
+
+
+
+           left.addEventListener('mousemove', function(event){
+
+           console.log(event.clientX + ', '+ event.clientY);
+
+            let move=((event.clientX *0.05)+4);
+
+            let moveContent=(event.clientX *0.001);
+
+            content.style.transform=`translateX(${moveContent}%)`;
+
+            protos.forEach((proto)=>{
+                proto.style.transform=`translateX(${move}%)`;
+            })
+           })
+
+
+
+
+          /* left.addEventListener('mousemove', (event) => {
+            let move = (event.clientX * 0.05) + 4;
+            let move2 = (event.clientX * 0.003);
+            content.style.transform = `translateX(-${move2}%)`;
+
+            protos.forEach((proto) => {
+                proto.style.transform = `translateX(${move}%)`;
+            })
+        })*/ 
+
+       </script>
+   </body>
+</html>
