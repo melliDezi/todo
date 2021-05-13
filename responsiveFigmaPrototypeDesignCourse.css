@@ -1,0 +1,327 @@
+
+
+
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,700&display=swap'); 
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+
+body{
+    font-family: 'Montserrat', sans-serif;
+    font-size: 18px;
+    height: 100vh;
+
+    background: #f7f3f3
+}
+
+.logo {
+    width: 120px;
+    
+}
+
+h1{
+    
+    margin: 1em 0;
+}
+
+
+
+
+span{
+    display:block;
+} 
+
+
+.container{
+
+    margin: 0 auto;
+    text-align: center;  
+   
+} 
+
+
+
+
+
+
+.left{
+
+    background: linear-gradient(160deg, #601df7 0%,#8800ff 100%);
+
+    padding: 1em;
+    
+    color: white;
+    
+}
+
+
+
+
+.container .right p{
+    margin: 2em 0 1em;
+}
+
+p{
+    line-height: 1.7rem;
+}
+
+.light{
+    margin-top: 2em;
+    color: rgba(255,255,255,.7) !important;
+} 
+
+.attention{
+    width: 100%;
+    margin: .5em auto 0;
+    text-align:center;
+} 
+
+
+.personImg{
+
+    margin-top: 2em;
+    width: 3em;
+    border-radius: 50%;
+    box-shadow: 16px -9px #601df7a3;
+
+    margin-left: 1em;
+
+} 
+
+.arrowImg{
+
+    margin-top: 1em;
+    width: 15em;
+    margin-left: -1em;
+
+}
+
+
+
+
+input, button{
+    padding: .5em;
+    width:  calc(100% - 3em);
+
+    font-size: 1.3rem;
+
+    outline:none; 
+    margin: 1em;
+
+}
+
+
+button {
+    width: calc(100% - 3em);
+    margin: 0;
+    background: #8800ff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    
+   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   .proto-container{
+    position: absolute;
+
+    /*clip-path: inset(0 45% 0 0);*/
+    top: 13%;
+    height: 24%;
+    z-index: 0;
+    width: 114%;
+    pointer-events: none; 
+} 
+
+.proto{
+    border: 3px solid rgb(255 255 255 / 10%);
+    width: 19%;
+    height: 80%;
+
+    float: left;
+    margin-left: 1em;
+    transform: translateX(10%);
+
+}
+
+   /* Below we'll do media queries to make the layout into 2 column grids 
+   for screens 768px and wider, to make it look nice on desktop */
+
+
+
+
+
+
+   @media only screen and (min-width: 1024px){
+
+
+    .logo{
+        margin: 1em 0;
+
+    } 
+
+    p{
+        line-height: 1.7em!important;
+    } 
+
+    .inner{
+        display: grid;
+
+        grid-template-columns: 55% auto;
+    }
+
+    .left{
+        text-align: left;
+        padding: 0 2em;
+        height: 100vh;
+
+        display: grid;
+  
+
+    } 
+
+
+    .left .content{
+
+        padding: 0 3em;
+
+    }
+
+
+    h1{
+        margin-top: 0;
+        margin-bottom: 1em;
+        font-size: 2.4em;
+    }
+
+    
+    .right{
+        
+        text-align: center;
+        align-self: center;
+        justify-self: center;
+        padding: 0px 2em 1.5em;
+
+        
+    }
+
+     .input{
+        width: calc(100% - 1em) !important;
+        margin: 1em 0;
+     } 
+
+
+     button {
+         /*width: 100% !important;  ---didn't need it */
+
+     } 
+
+     .proto-container{
+         position: absolute;
+
+         clip-path: inset(0 45% 0 0);
+         top: 20%;
+         height: 70%;
+
+         z-index: 0;
+         width: 100%;
+         /* pointer-events: none; */
+     } 
+
+     .proto{
+         border: 3px solid rgba(255,255,255,.1);
+         width: 19%;
+         height: 80%;
+
+         float: left;
+         margin-left: 1em;
+         transform: translateX(10%);
+
+     }
+    
+   }
+
+
+
+
+
+   @media only screen and (min-width: 768px){
+
+
+
+    body{
+        font-size: 20px;
+    }
+
+    .left{
+        
+        
+    } 
+
+    .right{
+     
+
+    }
+
+
+    input{
+        /*width: 60%;*/
+    }
+
+    button{
+         /*width: 60%;*/
+    }
+   }
+
+
+
+   @media (min-width: 600px) and (max-width: 1023px) {
+
+    input{
+        width: 60%;
+    }
+
+    button{
+         width: 60%;
+    }
+   
+}   
+
+
+
+@media only screen and (min-width: 1600px) {
+
+    body{
+        font-size: 22px;
+    } 
+
+    .content {
+        padding: 0 6em!important;
+    }
+
+    .right{
+        padding:0!important;
+    }
+}
