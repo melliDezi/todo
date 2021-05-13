@@ -84,14 +84,24 @@ p{
 
 .personImg{
 
-    margin-top: 2em;
+    /*margin-top: 2em;
     width: 3em;
     border-radius: 50%;
     box-shadow: 16px -9px #601df7a3;
 
-    margin-left: 1em;
+    margin-left: 1em; */
+
+
+
+    margin-top: 2em;
+    width: 2em;
+    border-radius: 50%;
+    box-shadow: 16px -9px #601df7a3;
+    margin-left: -1em;
 
 } 
+
+
 
 .arrowImg{
 
