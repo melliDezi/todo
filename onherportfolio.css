@@ -1,0 +1,108 @@
+ 
+ 
+ *{
+     margin:0;
+     padding:0;
+     box-sizing:border-box;
+
+ }
+ 
+ body{
+
+     font-family: 'Poppins', sans-serif;
+
+     background-color: #f7f6f6; 
+
+ }
+
+
+
+
+ section {
+
+    padding: 100px;
+ }
+
+
+ 
+ .banner{
+
+    position:relative;
+    min-height:100vh;
+
+    display: flex;
+    justify-content:space-between;
+    align-items:center;
+
+
+ }
+
+
+ .banner h2{
+
+  font-size: 2em; 
+
+   
+   color: #25b6c6;
+   
+
+   line-height: 1.2em;
+ }
+    
+
+
+ .banner p{
+
+   font-size: 1.5em;
+   display: block;
+ }
+
+
+/*
+#hi{
+
+    margin-top: 80px;
+
+    margin-left: 20px;
+
+    width: 500px; 
+
+    float: left;
+
+    color: #25b6c6;
+
+} */
+
+
+
+ #onherlaptopgirl{
+
+    width: 65vh;
+
+   /* width: 65vh; */
+    float: right;
+
+
+ }
+
+
+
+ #workBtn{
+   position: relative;
+   display: inline-block;
+   border-style: none;
+    background-color: #ea3730;
+    color: #ecc8c8;
+    border-radius: 9px;
+    width: 100px;
+    height: 40px;
+    padding: 5px;
+    font-size: 15px;
+    margin-top: 30px;
+
+
+ } 
+
+
+
+ 
