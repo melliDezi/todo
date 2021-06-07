@@ -1,0 +1,146 @@
+
+*{
+     margin:0;
+     padding:0;
+     box-sizing:border-box;
+
+ }
+ 
+ body{
+
+     font-family: 'Poppins', sans-serif;
+
+     background-color: #f7f6f6; 
+
+ }
+
+
+/*
+ .row:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+*/
+
+  #column {
+ 
+    padding: 10px;
+   
+    margin: 0 auto;
+  }
+
+
+
+  #greeting {
+
+   text-align:center;
+
+  }
+
+
+  h2{
+
+    font-size: 2em; 
+  
+     
+     color: #25b6c6;
+     
+  
+     line-height: 1.2em;
+   }
+
+
+  .pic{
+  
+
+    margin: 0 auto;
+    /*padding: 50px;*/
+    text-align: center;
+
+  }
+
+
+  #hi{
+
+    font-size: 1.5em;
+  }
+
+  
+  #onherlaptopgirl{
+    
+    width: 55vh;
+
+    text-align:center;
+  }
+
+
+  #tagLine{
+
+    margin: 0 auto;
+    text-align:center;
+  }
+
+
+  #pSpans {
+
+
+     text-align:center;
+  }
+
+
+
+
+  
+
+  
+ #workBtn{
+    position: relative;
+    display: inline-block;
+    border-style: none;
+     background-color: #ea3730;
+     color: #ecc8c8;
+     border-radius: 9px;
+     width: 100px;
+     height: 40px;
+     padding: 5px;
+     font-size: 15px;
+     margin-top: 30px;
+ 
+ 
+  }  
+
+
+  #certifications{
+
+ 
+    /*display: flex; */
+  } 
+
+
+  .hubacademybadge{
+
+    /*justify-content: space-evenly;
+    align-items:center; */
+
+    display: block;
+  padding: 8px;
+  }
+
+
+  li{
+      display:inline;
+      list-style: none;
+  } 
+
+
+  a{
+      margin: 15px;
+      text-decoration: none;
+  }
+
+
+
+
+
+ 
